@@ -1,6 +1,18 @@
 class API {
     constructor() {
-        this.baseURL = window.location.origin + '/api';
+        // More robust base URL detection for different environments
+        this.baseURL = this.getBaseURL() + '/api';
+        this.timeout = 30000; // 30 second timeout
+    }
+
+    getBaseURL() {
+        // Handle different deployment scenarios
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return window.location.origin;
+        }
+        
+        // For Railway or other cloud deployments
+        return window.location.origin;
     }
 
     async request(endpoint, options = {}) {
@@ -10,6 +22,8 @@ class API {
                 'Content-Type': 'application/json',
                 ...options.headers,
             },
+            // Add timeout for better UX
+            signal: AbortSignal.timeout(this.timeout),
             ...options,
         };
 
@@ -18,17 +32,63 @@ class API {
         }
 
         try {
+            console.log(`🌐 API Request: ${config.method || 'GET'} ${url}`);
+            
             const response = await fetch(url, config);
             
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                let errorData;
+                try {
+                    errorData = await response.json();
+                } catch {
+                    errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+                }
+                
+                // More specific error handling
+                const error = new Error(errorData.error || errorData.message || `HTTP error! status: ${response.status}`);
+                error.status = response.status;
+                error.data = errorData;
+                throw error;
             }
 
-            return await response.json();
+            const data = await response.json();
+            console.log(`✅ API Response: ${config.method || 'GET'} ${url}`, data);
+            return data;
+            
         } catch (error) {
-            console.error('API request failed:', error);
+            // Enhanced error logging for debugging
+            if (error.name === 'AbortError') {
+                console.error('❌ API request timeout:', url);
+                throw new Error('Request timeout - please check your connection');
+            } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                console.error('❌ Network error:', url, error);
+                throw new Error('Network error - please check your connection');
+            } else {
+                console.error('❌ API request failed:', url, error);
+                throw error;
+            }
+        }
+    }
+
+    // Add a health check method for deployment verification
+    async healthCheck() {
+        try {
+            const response = await this.request('/test');
+            console.log('✅ API Health Check passed:', response);
+            return response;
+        } catch (error) {
+            console.error('❌ API Health Check failed:', error);
             throw error;
+        }
+    }
+
+    // Add connection test method
+    async testConnection() {
+        try {
+            const response = await fetch(`${this.baseURL.replace('/api', '')}/health`);
+            return response.ok;
+        } catch {
+            return false;
         }
     }
 
@@ -219,4 +279,14 @@ class API {
 
 // Initialize API and make it globally available
 window.api = new API();
-console.log('API initialized');
+
+// Test connection on load for debugging
+window.api.testConnection().then(connected => {
+    if (connected) {
+        console.log('✅ API connection test passed');
+    } else {
+        console.warn('⚠️ API connection test failed');
+    }
+});
+
+console.log('🚀 API initialized with base URL:', window.api.baseURL);

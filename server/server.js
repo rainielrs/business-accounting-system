@@ -110,11 +110,22 @@ app.get('/api/test', (req, res) => {
 
 // 🚨 CRITICAL: Static files MUST come AFTER API routes
 console.log('Setting up static file serving...');
-app.use(express.static(path.join(__dirname, '..'))); 
+
+// For Railway deployment, serve static files from the correct path
+const staticPath = process.env.NODE_ENV === 'production' 
+  ? path.join(__dirname, 'public') // Railway expects static files in a 'public' directory
+  : path.join(__dirname, '..'); // Local development uses parent directory
+
+console.log(`Static files path: ${staticPath}`);
+app.use(express.static(staticPath)); 
 
 // Serve the main HTML file
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+  const indexPath = process.env.NODE_ENV === 'production'
+    ? path.join(__dirname, 'public', 'index.html')
+    : path.join(__dirname, '..', 'index.html');
+  
+  res.sendFile(indexPath);
 });
 
 // 404 handler
@@ -123,7 +134,12 @@ app.use('*', (req, res) => {
   if (req.originalUrl.startsWith('/api/')) {
     res.status(404).json({ error: 'API endpoint not found' });
   } else {
-    res.sendFile(path.join(__dirname, '..', 'index.html'));
+    // Serve index.html for client-side routing
+    const indexPath = process.env.NODE_ENV === 'production'
+      ? path.join(__dirname, 'public', 'index.html')
+      : path.join(__dirname, '..', 'index.html');
+    
+    res.sendFile(indexPath);
   }
 });
 
