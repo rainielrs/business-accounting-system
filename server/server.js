@@ -32,10 +32,17 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// Serve static files
-app.use(express.static(path.join(__dirname, '..'))); 
+// 🚨 CRITICAL: API Routes MUST come BEFORE static files
+// API Routes
+app.use('/api/suppliers', require('./routes/suppliers'));
+app.use('/api/customers', require('./routes/customers'));
+app.use('/api/inventory', require('./routes/inventory'));
+app.use('/api/cash', require('./routes/cash'));
+app.use('/api/dashboard', require('./routes/dashboard'));
+app.use('/api/returns', require('./routes/returns'));
+app.use('/api/settings', require('./routes/settings'));
 
-// Add this route BEFORE your existing routes
+// Database setup route
 app.get('/setup-database', async (req, res) => {
   try {
     console.log('Setting up database using schema.sql...');
@@ -63,16 +70,7 @@ app.get('/setup-database', async (req, res) => {
   }
 });
 
-// API Routes
-app.use('/api/suppliers', require('./routes/suppliers'));
-app.use('/api/customers', require('./routes/customers'));
-app.use('/api/inventory', require('./routes/inventory'));
-app.use('/api/cash', require('./routes/cash'));
-app.use('/api/dashboard', require('./routes/dashboard'));
-app.use('/api/returns', require('./routes/returns'));
-app.use('/api/settings', require('./routes/settings'));
-
-// Add this simple test route after your existing routes
+// Test database connection route
 app.get('/test-db', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
@@ -93,6 +91,10 @@ app.get('/test-db', async (req, res) => {
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
 });
+
+// 🚨 CRITICAL: Static files MUST come AFTER API routes
+// Serve static files (moved AFTER API routes)
+app.use(express.static(path.join(__dirname, '..'))); 
 
 // Serve the main HTML file
 app.get('/', (req, res) => {
