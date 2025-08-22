@@ -5,9 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
-    "build": "node scripts/copy-frontend.js",
-    "railway:start": "npm run build && npm start"
+    "dev": "nodemon server.js"
   },
   "engines": {
     "node": ">=14.0.0",
