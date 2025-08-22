@@ -23,7 +23,8 @@ function copyDir(src, dest) {
 
 console.log('🔄 Starting frontend file copy...');
 
-const frontendDir = path.join(__dirname, '..', '..');
+// Fix the path - in Railway, the project is in /app
+const frontendDir = '/app';  // Railway puts everything in /app
 const publicDir = path.join(__dirname, '..', 'public');
 
 console.log(`Frontend source: ${frontendDir}`);
