@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Settings - Business Accounting System</title>
+    <link rel="stylesheet" href="../css/settings.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+            <div class="header-content">
+                <div class="title-section">
+                    <div class="icon-title">
+                    <i class="fas fa-cog"></i>
+                        <h1>Settings</h1>
+                        </div>
+                        <p>System configuration and data management</p>
+                    </div>
+                </div>
+
+            <!-- Data Overview Section -->
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-database section-icon"></i>
+                    <div>
+                        <h2>Data Overview</h2>
+                        <p class="section-subtitle">Current system statistics</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number blue" id="suppliers-count">...</div>
+                    <div class="stat-label">Suppliers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number blue" id="customers-count">...</div>
+                    <div class="stat-label">Customers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number green" id="products-count">...</div>
+                    <div class="stat-label">Products</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number yellow" id="purchases-count">...</div>
+                    <div class="stat-label">Purchases</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number green" id="sales-count">...</div>
+                    <div class="stat-label">Sales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number gray" id="returns-count">...</div>
+                    <div class="stat-label">Returns</div>
+                </div>
+            </div>
+
+            <!-- Total Records Summary -->
+            <div class="total-summary">
+                <div class="total-number">Total Records: <span id="total-count">...</span></div>
+            </div>
+
+        <!-- Danger Zone Section -->
+        <div class="danger-zone">
+            <div class="danger-header">
+                <i class="fas fa-exclamation-triangle danger-icon"></i>
+                <div>
+                    <h3>Danger Zone</h3>
+                    <p class="danger-subtitle">Irreversible actions that will permanently delete data</p>
+                </div>
+            </div>
+
+            <div class="danger-content">
+                <div class="reset-section">
+                    <div class="reset-info">
+                        <h4>Reset All Data</h4>
+                        <p>This will permanently delete all suppliers, customers, inventory and returns. This action cannot be undone.</p>
+                    </div>
+                    <div class="reset-actions">
+                        <button class="btn-reset" id="resetBtn" onclick="showResetConfirmation()">
+                            <i class="fas fa-trash"></i>
+                            Reset System
+                        </button>
+                        <div class="reset-confirmation" id="resetConfirmation" style="display: none;">
+                            <button class="btn-cancel" onclick="hideResetConfirmation()">Cancel</button>
+                            <button class="btn-confirm" onclick="resetAllData()">
+                                <i class="fas fa-trash"></i>
+                                Confirm Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>
