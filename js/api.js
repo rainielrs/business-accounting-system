@@ -1,6 +1,6 @@
 class API {
     constructor() {
-        this.baseURL = 'http://localhost:3000/api';
+        this.baseURL = window.location.origin + '/api';
     }
 
     async request(endpoint, options = {}) {
