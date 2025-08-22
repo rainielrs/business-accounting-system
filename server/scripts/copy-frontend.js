@@ -23,12 +23,22 @@ function copyDir(src, dest) {
 
 console.log('🔄 Starting frontend file copy...');
 
-// Fix the path - in Railway, the project is in /app
-const frontendDir = '/app';  // Railway puts everything in /app
-const publicDir = path.join(__dirname, '..', 'public');
+// Correct paths for Railway deployment
+// __dirname is /app/server/scripts
+// We need to go up to /app (project root) where frontend files are
+const frontendDir = path.join(__dirname, '..', '..'); // Go up to project root
+const publicDir = path.join(__dirname, '..', 'public'); // server/public
 
 console.log(`Frontend source: ${frontendDir}`);
 console.log(`Public destination: ${publicDir}`);
+
+// Debug: List what's actually in the frontend directory
+try {
+  const rootFiles = fs.readdirSync(frontendDir);
+  console.log('📁 Files in project root:', rootFiles);
+} catch (error) {
+  console.log('❌ Error reading project root:', error.message);
+}
 
 if (!fs.existsSync(publicDir)) {
   fs.mkdirSync(publicDir, { recursive: true });
@@ -43,7 +53,7 @@ filesToCopy.forEach(file => {
     fs.copyFileSync(src, dest);
     console.log(`✅ Copied: ${file}`);
   } else {
-    console.log(`❌ Missing: ${file}`);
+    console.log(`❌ Missing: ${file} (looking in ${src})`);
   }
 });
 
@@ -55,7 +65,7 @@ dirsToCopy.forEach(dir => {
     copyDir(src, dest);
     console.log(`✅ Copied directory: ${dir}`);
   } else {
-    console.log(`❌ Missing directory: ${dir}`);
+    console.log(`❌ Missing directory: ${dir} (looking in ${src})`);
   }
 });
 
