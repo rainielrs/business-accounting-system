@@ -2,57 +2,60 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('🚀 Setting up frontend files for Railway deployment...');
-
-const copyFrontendFiles = () => {
-  const publicDir = path.join(__dirname, '..', 'public');
-  
-  // Create public directory if it doesn't exist
-  if (!fs.existsSync(publicDir)) {
-    fs.mkdirSync(publicDir, { recursive: true });
-    console.log('📁 Created public directory');
+function copyDir(src, dest) {
+  if (!fs.existsSync(dest)) {
+    fs.mkdirSync(dest, { recursive: true });
   }
   
-  // Files and directories to copy from parent directory
-  const itemsToCopy = [
-    'index.html',
-    'manifest.json', 
-    'sw.js',
-    'css',
-    'js', 
-    'img',
-    'icons',
-    'pages'
-  ];
+  const entries = fs.readdirSync(src, { withFileTypes: true });
   
-  itemsToCopy.forEach(item => {
-    const sourcePath = path.join(__dirname, '..', '..', item);
-    const destPath = path.join(publicDir, item);
+  for (let entry of entries) {
+    const srcPath = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
     
-    try {
-      if (fs.existsSync(sourcePath)) {
-        if (fs.lstatSync(sourcePath).isDirectory()) {
-          // Copy directory recursively
-          fs.cpSync(sourcePath, destPath, { recursive: true, force: true });
-        } else {
-          // Copy file
-          fs.copyFileSync(sourcePath, destPath);
-        }
-        console.log(`✅ Copied ${item} to public directory`);
-      } else {
-        console.log(`⚠️  ${item} not found, skipping...`);
-      }
-    } catch (error) {
-      console.error(`❌ Error copying ${item}:`, error.message);
+    if (entry.isDirectory()) {
+      copyDir(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
     }
-  });
-  
-  console.log('🎉 Frontend files setup complete!');
-};
-
-// Only run if this script is executed directly
-if (require.main === module) {
-  copyFrontendFiles();
+  }
 }
 
-module.exports = { copyFrontendFiles }
+console.log('🔄 Starting frontend file copy...');
+
+const frontendDir = path.join(__dirname, '..', '..');
+const publicDir = path.join(__dirname, '..', 'public');
+
+console.log(`Frontend source: ${frontendDir}`);
+console.log(`Public destination: ${publicDir}`);
+
+if (!fs.existsSync(publicDir)) {
+  fs.mkdirSync(publicDir, { recursive: true });
+  console.log('✅ Created public directory');
+}
+
+const filesToCopy = ['index.html', 'manifest.json', 'sw.js'];
+filesToCopy.forEach(file => {
+  const src = path.join(frontendDir, file);
+  const dest = path.join(publicDir, file);
+  if (fs.existsSync(src)) {
+    fs.copyFileSync(src, dest);
+    console.log(`✅ Copied: ${file}`);
+  } else {
+    console.log(`❌ Missing: ${file}`);
+  }
+});
+
+const dirsToCopy = ['css', 'js', 'pages', 'img', 'icons'];
+dirsToCopy.forEach(dir => {
+  const src = path.join(frontendDir, dir);
+  const dest = path.join(publicDir, dir);
+  if (fs.existsSync(src)) {
+    copyDir(src, dest);
+    console.log(`✅ Copied directory: ${dir}`);
+  } else {
+    console.log(`❌ Missing directory: ${dir}`);
+  }
+});
+
+console.log('🎉 Frontend files copied successfully!');
