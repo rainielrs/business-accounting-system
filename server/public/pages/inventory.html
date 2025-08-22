@@ -1,0 +1,153 @@
+<head>
+    <link rel="stylesheet" href="../css/inventory.css">
+</head>
+
+<section id="inventory" class="page-section">
+    <!-- Header Section -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="title-section">
+                <div class="icon-title">
+                    <i class="fas fa-box"></i>
+                    <h2>Inventory</h2>
+                </div>
+                <p class="subtitle">Manage your inventory and track stock levels</p>
+            </div>
+            <button class="btn-add-item">
+                <i class="fas fa-plus"></i>
+                Add New Item
+            </button>
+        </div>
+    </div>
+
+    <!-- Total Inventory Value Card -->
+    <div class="inventory-card">
+        <div class="card-top-section">
+            <div class="card-icon">
+                <i class="fas fa-warehouse"></i>
+            </div>
+            <div class="card-title-section">
+                <h2>Total Inventory Value</h2>
+                <p class="card-description">Total value of all inventory items</p>
+            </div>
+        </div>
+        <div class="card-amount-section">
+            <div class="amount">$0.00</div>
+            <p class="items-count">Across 0 items</p>
+        </div>
+    </div>
+
+    <!-- All Inventory Section -->
+    <div class="inventory-section">
+        <div class="section-header">
+            <h2>All Inventory Items</h2>
+            <p class="section-description">List of all inventory transactions</p>
+        </div>
+        
+        <!-- Search and Filter Bar -->
+        <div class="search-filter-bar">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search inventory..." class="search-input">
+            </div>
+            <div class="filter-container">
+                <select class="filter-select">
+                    <option value="all">All Items</option>
+                    <option value="fully_paid">Fully Paid</option>
+                    <option value="outstanding">Outstanding</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Inventory Table -->
+        <div class="table-container">
+            <table class="inventory-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Supplier Name</th>
+                        <th>Product Name</th>
+                        <th>Product Code</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Grand Total</th>
+                        <th>Amount Paid</th>
+                        <th>Outstanding Amount</th>
+                        <th>Make Payment</th>
+                        <th>Return</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be loaded here from database -->
+
+    <!-- Return Modal -->
+    <div id="returnModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Process Inventory Return</h2>
+                <span class="close" onclick="inventoryManager.closeReturnModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="return-info">
+                    <div class="info-row">
+                        <label>Supplier:</label>
+                        <span id="returnSupplierName"></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Product:</label>
+                        <span id="returnProductName"></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Product Code:</label>
+                        <span id="returnProductCode"></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Available Quantity:</label>
+                        <span id="returnMaxQuantity"></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Unit Price:</label>
+                        <span>$<span id="returnUnitPrice"></span></span>
+                    </div>
+                </div>
+                
+                <form id="inventoryReturnForm">
+                    <div class="form-group">
+                        <label for="returnQuantity">Return Quantity</label>
+                        <input type="number" id="returnQuantity" name="returnQuantity" min="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="refundAmount">Refund Amount</label>
+                        <input type="number" id="refundAmount" name="refundAmount" min="0" step="0.01" required>
+                        <small style="color: #666; font-style: italic;">Auto-calculated based on quantity, but you can edit this amount</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="returnReason">Reason for Return</label>
+                        <select id="returnReason" name="returnReason">
+                            <option value="Supplier return">Supplier return</option>
+                            <option value="Defective product">Defective product</option>
+                            <option value="Wrong item delivered">Wrong item delivered</option>
+                            <option value="Damaged in transit">Damaged in transit</option>
+                            <option value="Quality issues">Quality issues</option>
+                            <option value="Overstocked">Overstocked</option>
+                            <option value="Expired product">Expired product</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="returnNotes">Additional Notes</label>
+                        <textarea id="returnNotes" name="returnNotes" rows="3" placeholder="Optional notes about the return..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="inventoryManager.closeReturnModal()">Cancel</button>
+                <button type="button" class="btn-submit" onclick="inventoryManager.submitReturn()">Process Return</button>
+            </div>
+        </div>
+    </div>
+
+<script src="../js/inventory.js"></script>

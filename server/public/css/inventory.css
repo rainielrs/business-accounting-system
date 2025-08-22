@@ -1,0 +1,619 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+    color: #1f2937;
+}
+
+.page-section {
+    background-color: #f8fafc;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Page Header */
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.btn-add-item {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    display: none;
+}
+
+.btn-add-item:hover {
+    background: var(--secondary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+/* Inventory Card */
+.inventory-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.card-top-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+}
+
+.card-icon {
+    color: #1e40af;
+    width: 40px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.card-title-section {
+    flex: 1;
+}
+
+.card-title-section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.25rem 0;
+}
+
+.card-description {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.card-amount-section {
+    margin-top: 0.75rem;
+}
+
+.amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 0.25rem;
+    line-height: 1;
+}
+
+.items-count {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+    text-align: left;
+}
+
+/* Inventory Section */
+.inventory-section {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+    margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+}
+
+.section-description {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+/* Search and Filter Bar */
+.search-filter-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-container {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-container i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.filter-select {
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Table Container */
+.table-container {
+    overflow-x: auto;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+    max-width: calc(100vw - 380px - 4rem);
+}
+
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background: white;
+}
+
+.inventory-table thead {
+    background: #f9fafb;
+}
+
+.inventory-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.inventory-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.inventory-table tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.inventory-table tbody tr:not(:last-child) {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.inventory-table td {
+    padding: 1rem;
+    font-size: 0.875rem;
+    color: #374151;
+    vertical-align: middle;
+}
+
+/* Supplier Info */
+.supplier-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Amount Styling */
+.outstanding-amount {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.paid-amount {
+    color: #059669;
+    font-weight: 600;
+}
+
+/* Action Buttons */
+.btn-payment,
+.btn-return {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #f59e0b;
+    color: white;
+    min-width: 80px;
+    max-width: 120px;
+    width: auto;
+    white-space: nowrap;
+}
+
+.btn-payment {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-payment:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.btn-return {
+    background: #f59e0b;
+    color: white;
+}
+
+.btn-return:hover {
+    background: #d97706;
+    transform: translateY(-1px);
+}
+
+.btn-payment:disabled {
+    background-color: #d1d5db;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+.btn-payment:disabled:hover {
+    background-color: #d1d5db;
+    transform: none;
+}
+
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background: white;
+    min-width: 1200px; 
+}
+
+.table-container {
+    overflow-x: auto;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+    max-width: calc(100vw - 380px - 4rem);
+}
+
+@media (max-width: 1024px) {
+    .page-section {
+        padding: 1.5rem;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-filter-bar {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-section {
+        padding: 1rem;
+    }
+    
+    .inventory-card {
+        padding: 1.5rem;
+        flex-direction: column;
+        align-items: stretch; 
+    }
+    
+    .card-top-section {
+        flex-direction: row; 
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .card-amount-section {
+        text-align: left;
+    }
+    
+    .amount {
+        font-size: 2rem;
+    }
+    
+    .inventory-section {
+        padding: 1.5rem;
+    }
+
+    .table-container {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    #inventory {
+        padding: 0;
+        background: transparent;
+        border-radius: none;
+        box-shadow: none;
+        border: none;
+    }
+    
+    .inventory-table th,
+    .inventory-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    .supplier-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .inventory-section {
+        padding: 0;
+        max-width: 100%;
+        background: transparent;
+        border-radius: none;
+        box-shadow: none;
+        border: none;
+    }
+    
+    .btn-payment,
+    .btn-return {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    .icon-title {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.75rem; 
+    }
+
+    .btn-add-item {
+        justify-content: center;
+    }
+    
+    .icon-title h2 {
+        font-size: 1.5rem;
+    }
+    
+    .amount {
+        font-size: 1.75rem;
+    }
+    
+    .inventory-card {
+        flex-direction: column;
+    }
+    
+    .card-top-section {
+        flex-direction: row; 
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .card-amount-section {
+        text-align: left;
+    }
+
+    .btn-return span{
+        display: none;
+    }
+}
+
+/* Loading States */
+.loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6b7280;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #d1d5db;
+}
+
+.empty-state h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #374151;
+}
+
+.empty-state p {
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Focus States for Accessibility */
+.btn-add-item:focus,
+.btn-payment:focus,
+.btn-return:focus,
+.search-input:focus,
+.filter-select:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+    .page-section {
+        padding: 0;
+        max-width: none;
+    }
+    
+    .btn-add-item,
+    .btn-payment,
+    .btn-return,
+    .search-filter-bar {
+        display: none;
+    }
+    
+    .inventory-card {
+        background: white !important;
+        color: black !important;
+        box-shadow: none;
+        border: 1px solid #e5e7eb;
+    }
+    
+    .inventory-table {
+        border: 1px solid #000;
+    }
+    
+    .inventory-table th,
+    .inventory-table td {
+        border: 1px solid #000;
+    }
+}
+
+/* Status Indicators */
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-indicator.fully-paid {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-indicator.outstanding {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-indicator.overdue {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Tooltip Styles */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #374151;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.75rem;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
