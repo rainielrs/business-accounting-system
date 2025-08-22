@@ -22,6 +22,12 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Debug middleware to log all requests
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  next();
+});
+
 // Security headers for production
 if (process.env.NODE_ENV === 'production') {
   app.use((req, res, next) => {
@@ -33,14 +39,19 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // 🚨 CRITICAL: API Routes MUST come BEFORE static files
-// API Routes
-app.use('/api/suppliers', require('./routes/suppliers'));
-app.use('/api/customers', require('./routes/customers'));
-app.use('/api/inventory', require('./routes/inventory'));
-app.use('/api/cash', require('./routes/cash'));
-app.use('/api/dashboard', require('./routes/dashboard'));
-app.use('/api/returns', require('./routes/returns'));
-app.use('/api/settings', require('./routes/settings'));
+console.log('Loading API routes...');
+
+// Check if route files exist before requiring them
+const routeFiles = ['suppliers', 'customers', 'inventory', 'cash', 'dashboard', 'returns', 'settings'];
+routeFiles.forEach(routeFile => {
+  const routePath = path.join(__dirname, 'routes', `${routeFile}.js`);
+  if (fs.existsSync(routePath)) {
+    console.log(`✅ Loading route: /api/${routeFile}`);
+    app.use(`/api/${routeFile}`, require(`./routes/${routeFile}`));
+  } else {
+    console.log(`❌ Route file missing: ${routePath}`);
+  }
+});
 
 // Database setup route
 app.get('/setup-database', async (req, res) => {
@@ -92,8 +103,13 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// Test API endpoint
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'API is working!', timestamp: new Date() });
+});
+
 // 🚨 CRITICAL: Static files MUST come AFTER API routes
-// Serve static files (moved AFTER API routes)
+console.log('Setting up static file serving...');
 app.use(express.static(path.join(__dirname, '..'))); 
 
 // Serve the main HTML file
@@ -103,6 +119,7 @@ app.get('/', (req, res) => {
 
 // 404 handler
 app.use('*', (req, res) => {
+  console.log(`404 - Route not found: ${req.originalUrl}`);
   if (req.originalUrl.startsWith('/api/')) {
     res.status(404).json({ error: 'API endpoint not found' });
   } else {
