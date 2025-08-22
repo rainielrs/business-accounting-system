@@ -72,6 +72,23 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/returns', require('./routes/returns'));
 app.use('/api/settings', require('./routes/settings'));
 
+// Add this simple test route after your existing routes
+app.get('/test-db', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW()');
+    res.json({ 
+      success: true, 
+      message: 'Database connection working!',
+      time: result.rows[0].now 
+    });
+  } catch (error) {
+    res.json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
+});
+
 // Health check endpoint for deployment platforms
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
