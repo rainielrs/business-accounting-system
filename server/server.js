@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
+const { pool } = require('./config/database');
 require('dotenv').config();
 
 const app = express();
@@ -32,6 +34,34 @@ if (process.env.NODE_ENV === 'production') {
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '..'))); 
+
+// Add this route BEFORE your existing routes
+app.get('/setup-database', async (req, res) => {
+  try {
+    console.log('Setting up database using schema.sql...');
+    
+    // Read the schema file
+    const schemaPath = path.join(__dirname, 'database', 'schema.sql');
+    const schema = fs.readFileSync(schemaPath, 'utf8');
+    
+    // Execute the schema
+    await pool.query(schema);
+    
+    console.log('Database setup completed successfully!');
+    res.json({ 
+      success: true, 
+      message: 'Database tables created successfully using schema.sql!',
+      tables: ['suppliers', 'supplier_products', 'inventory', 'customers', 'customer_products', 'cash_transactions', 'returns', 'return_items']
+    });
+
+  } catch (error) {
+    console.error('Database setup error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to setup database: ' + error.message 
+    });
+  }
+});
 
 // API Routes
 app.use('/api/suppliers', require('./routes/suppliers'));
